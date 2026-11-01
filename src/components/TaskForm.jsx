@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 function TaskForm({ onAdd }) {
-  console.log("TaskForm rendered");
   const [title, setTitle] = useState("");
 
   function handleSubmit(event) {

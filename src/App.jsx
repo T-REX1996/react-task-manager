@@ -10,7 +10,6 @@ const initialTasks = [
 ];
 
 function App() {
-  console.log("App rendered");
   const [tasks, setTasks] = useState(initialTasks);
 
   function handleAdd(title) {

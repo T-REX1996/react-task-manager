@@ -1,5 +1,4 @@
 function TaskList({ tasks, onToggle, onDelete }) {
-  console.log("TaskList rendered");
 
   return (
     <ul>
