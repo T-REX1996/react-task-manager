@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 
 const initialTasks = [
@@ -11,6 +12,10 @@ const initialTasks = [
 function App() {
   console.log("App rendered");
   const [tasks, setTasks] = useState(initialTasks);
+
+  function handleAdd(title) {
+    setTasks([...tasks, { id: Date.now(), title, completed: false }]);
+  }
 
   function handleToggle(id) {
     setTasks(
@@ -27,6 +32,7 @@ function App() {
   return (
     <>
       <h1>タスク管理</h1>
+      <TaskForm onAdd={handleAdd} />
       <TaskList tasks={tasks} onToggle={handleToggle} onDelete={handleDelete} />
     </>
   );
