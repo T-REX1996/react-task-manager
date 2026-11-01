@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import TaskList from "./components/TaskList";
 
@@ -9,11 +10,24 @@ const initialTasks = [
 
 function App() {
   console.log("App rendered");
+  const [tasks, setTasks] = useState(initialTasks);
+
+  function handleToggle(id) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  }
+
+  function handleDelete(id) {
+    setTasks(tasks.filter((task) => task.id !== id));
+  }
 
   return (
     <>
       <h1>タスク管理</h1>
-      <TaskList tasks={initialTasks} />
+      <TaskList tasks={tasks} onToggle={handleToggle} onDelete={handleDelete} />
     </>
   );
 }
