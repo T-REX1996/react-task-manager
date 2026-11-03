@@ -1,7 +1,11 @@
+import { useContext } from "react";
+import { ThemeContext } from "../ThemeContext";
+
 function TaskList({ tasks, onToggle, onDelete }) {
+  const { isDark } = useContext(ThemeContext);
 
   return (
-    <ul>
+    <ul style={{ background: isDark ? "#333" : "#f5f5f5" }}>
       {tasks.map((task) => (
         <li key={task.id}>
           <input
