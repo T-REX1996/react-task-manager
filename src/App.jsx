@@ -1,4 +1,4 @@
-import { useContext, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import "./App.css";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
@@ -12,6 +12,20 @@ const initialState = {
   ],
   history: [],
 };
+
+const STORAGE_KEY = "tasks";
+
+function init() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return {
+      tasks: saved ? JSON.parse(saved) : initialState.tasks,
+      history: [],
+    };
+  } catch {
+    return initialState;
+  }
+}
 
 function tasksReducer(state, action) {
   switch (action.type) {
@@ -43,14 +57,31 @@ function tasksReducer(state, action) {
         history: state.history.slice(0, -1),
         tasks: state.history[state.history.length - 1],
       };
+    case "sync":
+      return { history: [], tasks: action.tasks };
     default:
       return state;
   }
 }
 
 function AppContent() {
-  const [state, dispatch] = useReducer(tasksReducer, initialState);
+  const [state, dispatch] = useReducer(tasksReducer, undefined, init);
   const { isDark, setIsDark } = useContext(ThemeContext);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks));
+  }, [state.tasks]);
+
+  useEffect(() => {
+    function handleStorage(event) {
+      if (event.key === STORAGE_KEY && event.newValue) {
+        dispatch({ type: "sync", tasks: JSON.parse(event.newValue) });
+      }
+    }
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   function handleAdd(title) {
     dispatch({ type: "add", title });
